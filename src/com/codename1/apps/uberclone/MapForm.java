@@ -122,6 +122,24 @@ layer.animateLayout(200);
 
 
 
+private void paintWhereToToolbarBackground(Graphics g1, Rectangle rect, final Label fromSelected, Image circle, final Label toSelected) {
+g1.setAlpha(255);
+/*①*/ g1.setColor(0xffffff); 
+/*②*/ if (dropShadow != null ) { 
+/*③*/ g1.drawImage(dropShadow, rect.getX() - shadowHeight, rect.getY () + rect.getHeight() - dropShadow.getHeight() / 4*3 );
+/* ④*/ g1.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getY() + rect.getHeight() - shadowHeight);
+} else g1.fillRect(rect.getX (),rect.getY(),rect.getWidth(), rect.getHeight());
+g1.setColor(0xa4a4ac);
+
+g1.setAntiAliased(true);
+int x = fromSelected.getAbsoluteX() + fromSelected.getWidth()/2-1;
+int y = fromSelected.getAbsoluteY() + fromSelected.getHeight()/2+circle.getHeight()/2; 
+/*⑤*/ g1.fillRect(x, y, 2, toSelected.getAbsoluteY()-y+toSelected.getHeight()/2-circle.getHeight()/2);
+
+
+}
+
+
 
 
 }
