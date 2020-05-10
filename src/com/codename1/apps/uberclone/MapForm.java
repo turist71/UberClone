@@ -5,11 +5,16 @@
  */
 package com.codename1.apps.uberclone;
 
+import static com.codename1.ui.FontImage.*; 
+
 import com.codename1.maps.Coord;
 import static com.codename1.ui.CN.convertToPixels;
 import com.codename1.ui.Form;
 import com.codename1.ui.Image;
 import com.codename1.ui.layouts.LayeredLayout;
+import java.awt.Graphics;
+import java.awt.Label;
+import java.awt.Rectangle;
 
 /**
  *
@@ -56,6 +61,51 @@ add(BorderLayout.south(gradient));
 add(BorderLayout.south(FlowLayout. encloseCenter (h1, h2))); 
 
 whereTo.addActionListener(e > showNavigationToolbar()); 
+
+from.addFocusListener(new FocusListener() {
+
+public void focusGained (Component cmp) {
+
+fromSelected.setIco(square); //① 
+if (layer.getComponentCount () > 1) { //② 
+
+Component c = layer.getComponentAt ( 1 );
+c.setY(getDisplayHeight()); //③ 
+layer.animateUnlayout(200,150,() > { //④ 
+c.remove (); //⑤ 
+revalidate();
+
+});
+
+}
+
+}
+
+
+public void focusLost (Component cmp) {
+
+fromSelected.setIcon(circle);
+
+}
+
+});
+
+to.addFocusListener( new FocusListener() { 
+
+public void focusGained (Component cmp) {
+
+fromSelected.setIcon (circle);
+toSelected.setIcon (square);
+showToNavigationBar(layer);
+
+}
+
+public void focusLost (Component cmp) {
+toSelected.setIcon (circle);
+
+}
+
+});
 
 //*
 }
@@ -118,6 +168,11 @@ navigationToolbar.setWidth(getDisplayWidth());
 /*⑦*/ navigationToolbar.setHeight(getPreferredH());
 navigationToolbar.setY(-navigationToolbar.getHeight ());
 layer.animateLayout(200);
+
+
+
+
+
 } 
 
 
@@ -139,6 +194,45 @@ int y = fromSelected.getAbsoluteY() + fromSelected.getHeight()/2+circle.getHeigh
 
 }
 
+
+private void showToNavigationBar (Container parentLayer) {
+
+MultiButton addHome = new MultiButton( "Add Home" ); /*①*/ 
+addHome.setUIID("Container");
+addHome.setUIIDLine1("WhereToButtonLine1");
+addHome.setIconUIID("WhereToButtonIcon");
+setMaterialIcon(addHome,MATERIAL_HOME);
+MultiButton addWork = new MultiButton("Add Work");
+addWork.setUIID( "Container" );
+addWork.setUIIDLine1( "WhereToButtonLine1" );
+addWork.setIconUIID( "WhereToButtonIcon" );
+setMaterialIcon(addWork, MATERIAL_WORK);
+MultiButton savedPlaces = new MultiButton( "Saved Places" );
+savedPlaces.setUIID( "Container" );
+savedPlaces.setUIIDLine1( "WhereToButtonLineNoBorder" );
+savedPlaces.setEmblemUIID( "WhereToButtonLineNoBorder" );
+savedPlaces.setIconUIID( "WhereToButtonIcon" );
+savedPlaces.setEmblem(createMaterial(MATERIAL_NAVIGATE_NEXT,
+
+
+whereSeparator.setShowEvenIfBlank ( true ); //② 
+MultiButton history1 = new MultiButton( "Mikve Yisrael Str..." );
+history1.setUIID ( "Container" );
+history1.setUIIDLine1 ( "WhereToButtonLine1" );
+history1.setIconUIID ( "WhereToButtonIcon" );
+setMaterialIcon(history1, MATERIAL_HISTORY);
+Container result = BoxLayout. encloseY (addHome, addWork,
+savedPlaces, whereSeparator, history1);
+result.setUIID ( "Form" ); //③ 
+result.setScrollableY ( true );
+result.setScrollVisible ( false ); //④ 
+result.setY (getDisplayHeight());
+result.setWidth (getDisplayWidth());
+result.setHeight (result. getPreferredH ());
+parentLayer.add (CENTER, result);
+parentLayer.animateLayout ( 200 ); //⑤ 
+
+} 
 
 
 
